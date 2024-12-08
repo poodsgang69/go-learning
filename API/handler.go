@@ -1,3 +1,6 @@
+//go:build file2
+// +build file2
+
 package main
 
 import "fmt"
