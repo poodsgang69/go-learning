@@ -4,41 +4,61 @@
 package main
 
 import (
-	"fmt"
-	"io/ioutil"
 	"log"
+	"module/new/directory/API/handlers"
 	"net/http"
+	"os"
 )
+
+const ERROR_MSG string = "Bad Request"
 
 func main() {
 
+	// /*
+	// 	ANONYMOUS FUNCTION
+	// */
+	// defaultPathHandler := func(rw http.ResponseWriter, r *http.Request) {
+	// 	log.Println("Response Handler for the default url / ")
+	// }
+
+	// helloWorldPathHandler := func(rw http.ResponseWriter, r *http.Request) {
+	// 	log.Println("Response Handler for the '/helloworld' endpoint ")
+	// 	data, err := ioutil.ReadAll(r.Body)
+	// 	if err != nil {
+	// 		// Option 1 using the http.Error
+	// 		// http.Error(rw, ERROR_MSG, http.StatusBadRequest)
+	// 		// Option 2 using the rw (io.writer)
+	// 		rw.WriteHeader(http.StatusBadRequest)
+	// 		rw.Write([]byte(ERROR_MSG))
+	// 		return
+	// 	}
+
+	// 	log.Printf("Data in the Request: %s", data)
+
+	// 	// fmt.Fprintf(rw, "Hello %s\n", data) //one way to use the rw (io.writer) to directly inject data into it.
+	// 	var response string = fmt.Sprintf("Hello %s", data)
+	// 	rw.WriteHeader(http.StatusOK)
+	// 	rw.Write([]byte(response))
+	// }
+
+	// http.HandleFunc("/", defaultPathHandler)
+	// // http.HandleFunc("/", func(rw http.ResponseWriter, r *http.Request) {
+	// // 	log.Println("Response Handler url /")
+	// // })
+
+	// http.HandleFunc("/helloworld", helloWorldPathHandler)
+
 	/*
-		ANONYMOUS FUNCTION
+		We are registering a custom serveHTTP method, which overrides the defaultServeMux
 	*/
-	defaultPathHandler := func(rw http.ResponseWriter, r *http.Request) {
-		log.Println("Response Handler for the default url / ")
-	}
+	l := log.New(os.Stdout, "API-GO Logger: ", log.LstdFlags)
+	hh := handlers.NewHello(l)
 
-	helloWorldPathHandler := func(rw http.ResponseWriter, r *http.Request) {
-		log.Println("Response Handler for the '/helloworld' endpoint ")
-		data, _ := ioutil.ReadAll(r.Body)
-		log.Printf("Data in the Request: %s", data)
-
-		// fmt.Fprintf(rw, "Hello %s\n", data) //one way to use the rw (io.writer) to directly inject data into it.
-		var response string = fmt.Sprintf("Hello %s", data)
-		rw.WriteHeader(http.StatusOK)
-		rw.Write([]byte(response))
-	}
-
-	http.HandleFunc("/", defaultPathHandler)
-	// http.HandleFunc("/", func(rw http.ResponseWriter, r *http.Request) {
-	// 	log.Println("Response Handler url /")
-	// })
-
-	http.HandleFunc("/helloworld", helloWorldPathHandler)
+	dsm := http.NewServeMux()
+	dsm.Handle("/helloworld", hh)
 
 	// http.ListenAndServe(":9090", http.DefaultServeMux)
-	http.ListenAndServe(":9090", nil)
+	http.ListenAndServe(":9090", dsm)
 
 }
 
