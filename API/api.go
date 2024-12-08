@@ -4,6 +4,7 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -22,6 +23,11 @@ func main() {
 		log.Println("Response Handler for the '/helloworld' endpoint ")
 		data, _ := ioutil.ReadAll(r.Body)
 		log.Printf("Data in the Request: %s", data)
+
+		// fmt.Fprintf(rw, "Hello %s\n", data) //one way to use the rw (io.writer) to directly inject data into it.
+		var response string = fmt.Sprintf("Hello %s", data)
+		rw.WriteHeader(http.StatusOK)
+		rw.Write([]byte(response))
 	}
 
 	http.HandleFunc("/", defaultPathHandler)
