@@ -38,7 +38,7 @@ func (h *Hello) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	log.Printf("Data in the Request: %s", data)
 
 	// fmt.Fprintf(rw, "Hello %s\n", data) //one way to use the rw (io.writer) to directly inject data into it.
-	var response string = fmt.Sprintf("Hello %s", data)
+	var response string = fmt.Sprintf("(/helloworld) Hello %s", data)
 	rw.WriteHeader(http.StatusOK)
 	rw.Write([]byte(response))
 }

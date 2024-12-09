@@ -52,13 +52,15 @@ func main() {
 		We are registering a custom serveHTTP method, which overrides the defaultServeMux
 	*/
 	l := log.New(os.Stdout, "API-GO Logger: ", log.LstdFlags)
-	hh := handlers.NewHello(l)
+	helloHandler := handlers.NewHello(l)
+	helloDefaultHandler := handlers.NewHelloDefault(l)
 
-	dsm := http.NewServeMux()
-	dsm.Handle("/helloworld", hh)
+	overallServeMux := http.NewServeMux()
+	overallServeMux.Handle("/", helloDefaultHandler)
+	overallServeMux.Handle("/helloworld", helloHandler)
 
 	// http.ListenAndServe(":9090", http.DefaultServeMux)
-	http.ListenAndServe(":9090", dsm)
+	http.ListenAndServe(":9090", overallServeMux)
 
 }
 
