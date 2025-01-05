@@ -4,9 +4,9 @@
 package main
 
 import (
+	"API/handlers"
 	"context"
 	"log"
-	"module/new/directory/API/handlers"
 	"net/http"
 	"os"
 	"os/signal"

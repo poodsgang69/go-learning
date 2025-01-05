@@ -29,6 +29,11 @@ func (p *Products) ToJSON(w io.Writer) error {
 	return jsonEncoder.Encode(p)
 }
 
+func (p *Product) FromJSON(r io.Reader) error {
+	jsonDecoder := json.NewDecoder(r)
+	return jsonDecoder.Decode(p)
+}
+
 var productList []*Product = []*Product{
 	&Product{
 		ID:          001,
