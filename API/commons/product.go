@@ -34,6 +34,16 @@ func (p *Product) FromJSON(r io.Reader) error {
 	return jsonDecoder.Decode(p)
 }
 
+// Object/Struct Bound Method
+func (p *Product) AddProductToProductList(product *Product) {
+	productList = append(productList, product)
+}
+
+// Struct UnBound Method
+func AddProductToProductList(product *Product) {
+	productList = append(productList, product)
+}
+
 var productList []*Product = []*Product{
 	&Product{
 		ID:          001,

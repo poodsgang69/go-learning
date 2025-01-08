@@ -40,6 +40,18 @@ func (p *Product) addProducts(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, "Unable to Un-Marshal Request Body JSON", http.StatusBadRequest)
 	}
 
+	/*
+		The method written below was written because the AddProductsToProductList was bound to the Product type so
+		only objects/variables of this type can access this method.
+	*/
+	// newProduct.AddProductToProductList(newProduct)
+
+	/*
+		Over here i modified the method to be bound to the module and not to the object being used.
+		This is better coding standard as we dont need to glue the method to the object and pass it again to the module to process.
+	*/
+	commons.AddProductToProductList(newProduct)
+
 	p.l.Printf("New Product Added is: %#v", newProduct)
 
 }
