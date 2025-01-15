@@ -2,6 +2,7 @@ package commons
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"time"
 )
@@ -44,6 +45,22 @@ func AddProductToProductList(product *Product) {
 	productList = append(productList, product)
 }
 
+func IsIdPresent(targetId int) int {
+	for productIndex, product := range productList {
+		if product.ID == targetId {
+			fmt.Printf("Product found at index: %d", productIndex)
+			return productIndex
+		}
+	}
+	fmt.Printf("Product with ID: %d not found", targetId)
+	return -1
+}
+
+func EditProductInProductList(product *Product, targetIndex int) {
+	productList[targetIndex] = product
+}
+
+// Slice of the STRUCT Product
 var productList []*Product = []*Product{
 	&Product{
 		ID:          001,

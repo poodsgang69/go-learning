@@ -25,6 +25,11 @@ func (p *Product) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if r.Method == http.MethodPut {
+		p.editProduct(rw, r)
+		return
+	}
+
 	// catch any other type of http.method
 	rw.WriteHeader(http.StatusMethodNotAllowed)
 }
@@ -67,9 +72,34 @@ func (p *Product) getProducts(rw http.ResponseWriter, r *http.Request) {
 	var err error = allProducts.ToJSON(rw)
 
 	if err != nil {
-		http.Error(rw, "Unable to marshal the Product Strut -> JSON", http.StatusInternalServerError)
+		http.Error(rw, "Unable to marshal the Product Struct -> JSON", http.StatusInternalServerError)
 	}
 
 	// We dont need this as we will be writing directly to the ResponseWriter using the NewEncoder
 	// rw.Write(jsonData)
+}
+
+func (p *Product) editProduct(rw http.ResponseWriter, r *http.Request) {
+	p.l.Println("Handling PUT Request")
+
+	editedProduct := &commons.Product{}
+
+	err := editedProduct.FromJSON(r.Body)
+	if err != nil {
+		http.Error(rw, "Unable to Un-Marshal Request Body JSON", http.StatusBadRequest)
+	}
+
+	var requiredId int = editedProduct.ID
+
+	// Check whether the ID in the URL is present in the ProductsList
+	var productIndex int = commons.IsIdPresent(requiredId)
+
+	if productIndex == -1 {
+		http.Error(rw, "ID not found in productsList. Please use another ID.", http.StatusBadRequest)
+		return
+	}
+
+	commons.EditProductInProductList(editedProduct, productIndex)
+
+	p.l.Printf("Products List edited with %#v", editedProduct)
 }
